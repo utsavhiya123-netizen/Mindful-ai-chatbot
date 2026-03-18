@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mindful AI Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      transition: background 0.5s ease;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .dark-mode {
+      background: #121212;
+      color: #f0f0f0;
+    }
+
+    header {
+      background: #006064;
+      color: #fff;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    nav a {
+      margin: 0 15px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffccbc;
+    }
+
+    .section {
+      padding: 30px 20px;
+      min-height: 60vh;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .chat-container {
+      margin: 30px auto;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 12px 25px;
+      margin-top: 10px;
+      background: linear-gradient(to right, #00bfa5, #00796b);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      animation: glow 1.5s infinite ease-in-out;
+    }
+
+    button:hover {
+      background: #004d40;
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 10px #00bfa5;
+      }
+      50% {
+        box-shadow: 0 0 20px #00e676;
+      }
+    }
+
+    .response {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f1f8e9;
+      border-left: 6px solid #7cb342;
+      border-radius: 8px;
+      animation: typing 1s steps(20, end) 1;
+      white-space: pre-wrap;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    .toggle-mode {
+      background: #fff;
+      color: #333;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .toggle-mode:hover {
+      background: #ddd;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #004d40;
+      color: #fff;
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background: radial-gradient(#b2ebf2 1px, transparent 1px);
+      background-size: 30px 30px;
+      animation: drift 10s linear infinite;
+      opacity: 0.2;
+    }
+
+    @keyframes drift {
+      from { background-position: 0 0; }
+      to { background-position: 100px 100px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="particles"></div>
+
+<header>
+  <h2>Mindful AI</h2>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#details">Details</a>
+    <a href="#chat">Chat</a>
+    <a href="#about">About</a>
+  </nav>
+  <button class="toggle-mode" onclick="toggleMode()">Toggle Day/Night</button>
+</header>
+
+<section id="home" class="section">
+  <h1>Welcome to Mindful AI Chatbot</h1>
+  <p>This AI helps you maintain better mental and physical health. Ask anything health-related — we're here 24/7.</p>
+</section>
+
+<section id="details" class="section">
+  <h2>Health Insights</h2>
+  <h3>Mental Health</h3>
+  <p>Take care of your mind. Practice meditation, manage stress, and sleep well.</p>
+  <ul>
+    <li>🧘 Meditate 10 mins daily</li>
+    <li>🕒 Keep a consistent routine</li>
+    <li>👂 Talk to someone you trust</li>
+  </ul>
+
+  <h3>Physical Health</h3>
+  <p>Your body is your temple. Stay active and eat healthy.</p>
+  <ul>
+    <li>🥗 Eat fruits & vegetables daily</li>
+    <li>🏃 Exercise 30 mins a day</li>
+    <li>💧 Stay hydrated (2–3 L/day)</li>
+  </ul>
+</section>
+
+<section id="chat" class="section">
+  <div class="chat-container">
+    <h2>Ask Anything</h2>
+    <textarea id="user-input" placeholder="Type your question here..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+    <div id="response" class="response" style="display:none;"></div>
+  </div>
+</section>
+
+<section id="about" class="section">
+  <h2>About This Project</h2>
+  <p><strong>Mindful AI</strong> is an intelligent chatbot assistant designed to give health-related guidance.</p>
+  <p>It uses free AI models from Together.ai and is aimed at spreading awareness for self-care and well-being.</p>
+</section>
+
+<footer>
+  &copy; 2025 Mindful AI | All rights reserved.
+</footer>
+
+<script>
+  // Mode toggle
+  function toggleMode() {
+    document.body.classList.toggle("dark-mode");
+  }
+
+  // Section scroll animation
+  document.querySelectorAll('.section').forEach(section => {
+    section.addEventListener("mouseenter", () => {
+      section.classList.add("visible");
+    });
+  });
+
+  // Chat interaction
+  function sendMessage() {
+    const userMessage = document.getElementById("user-input").value.trim();
+    const responseDiv = document.getElementById("response");
+    responseDiv.style.display = "block";
+    responseDiv.textContent = "Thinking...";
+
+    if (!userMessage) {
+      responseDiv.textContent = "Please type something.";
+      return;
+    }
+
+    fetch("http://127.0.0.1:5000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userMessage })
+    })
+    .then(response => response.json())
+    .then(data => {
+      responseDiv.textContent = data.reply || "No reply received.";
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      responseDiv.textContent = "Something went wrong.";
+    });
+  }
+</script>
+
+</body>
+</html>
